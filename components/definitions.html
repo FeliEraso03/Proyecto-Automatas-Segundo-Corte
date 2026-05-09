@@ -1,0 +1,80 @@
+<section id="definiciones">
+  <div class="contenedor">
+    <span class="seccion-label">§ Formalización</span>
+    <h2 class="seccion-titulo">Definiciones Formales</h2>
+    <p class="seccion-descripcion">
+      Cada componente del modelo se define como una tupla matemática.
+      Los dos autómatas capturan el comportamiento de los extremos del canal; la Red de Petri modela la concurrencia del canal de comunicación.
+    </p>
+
+    <div class="grid-2col">
+
+      <!-- Card FSM Cliente -->
+      <div class="card-def cliente">
+        <div class="card-label">Autómata Finito Determinista</div>
+        <h3 class="card-titulo cliente">FSM Cliente — A<sub>C</sub></h3>
+        <div class="formula">A<sub>C</sub> = (Q<sub>C</sub>, Σ, δ<sub>C</sub>, CERRADO, {ESTABLECIDO})</div>
+        <table class="tabla-t">
+          <thead>
+            <tr>
+              <th>Estado actual</th>
+              <th>Evento / Símbolo</th>
+              <th>Estado siguiente</th>
+              <th>Acción</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>CERRADO</td><td><code>iniciar_conexion</code></td><td>SYN-ENVIADO</td><td>Enviar SYN</td></tr>
+            <tr><td>SYN-ENVIADO</td><td><code>recibir_SYN-ACK</code></td><td>ESTABLECIDO</td><td>Enviar ACK</td></tr>
+            <tr><td>SYN-ENVIADO</td><td><code>timeout</code></td><td>CERRADO</td><td>Retransmitir / abortar</td></tr>
+            <tr><td>ESTABLECIDO</td><td><code>iniciar_cierre</code></td><td>FIN-ESPERA</td><td>Enviar FIN</td></tr>
+            <tr><td>FIN-ESPERA</td><td><code>recibir_FIN-ACK</code></td><td>CERRADO</td><td>Enviar ACK final</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Card FSM Servidor -->
+      <div class="card-def servidor">
+        <div class="card-label">Autómata Finito Determinista</div>
+        <h3 class="card-titulo servidor">FSM Servidor — A<sub>S</sub></h3>
+        <div class="formula">A<sub>S</sub> = (Q<sub>S</sub>, Σ, δ<sub>S</sub>, ESCUCHA, {ESTABLECIDO})</div>
+        <table class="tabla-t">
+          <thead>
+            <tr>
+              <th>Estado actual</th>
+              <th>Evento / Símbolo</th>
+              <th>Estado siguiente</th>
+              <th>Acción</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>ESCUCHA</td><td><code>recibir_SYN</code></td><td>SYN-RECIBIDO</td><td>Enviar SYN-ACK</td></tr>
+            <tr><td>ESCUCHA</td><td><code>recibir_SYN</code> (OFF)</td><td>ESCUCHA</td><td>Enviar RST</td></tr>
+            <tr><td>SYN-RECIBIDO</td><td><code>recibir_ACK</code></td><td>ESTABLECIDO</td><td>Conexión activa</td></tr>
+            <tr><td>SYN-RECIBIDO</td><td><code>timeout_srv</code></td><td>ESCUCHA</td><td>Retransmitir SYN-ACK</td></tr>
+            <tr><td>ESTABLECIDO</td><td><code>recibir_FIN</code></td><td>CERRANDO</td><td>Enviar FIN-ACK</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div><!-- /grid-2col -->
+
+    <!-- Red de Petri -->
+    <div style="margin-top:1.5rem" class="card-def" style="border-top-color: var(--c-canal);">
+      <div class="card-label">Red de Petri del Canal</div>
+      <h3 class="card-titulo" style="color:var(--c-canal)">N<sub>canal</sub> — Modelo de Plazas y Transiciones</h3>
+      <div class="formula">
+        N<sub>canal</sub> = (P, T, F, W, M₀) &nbsp;|&nbsp;
+        P = {p<sub>buf_C</sub>, p<sub>SYN</sub>, p<sub>buf_S</sub>, p<sub>SYNACK</sub>, p<sub>ACK</sub>, p<sub>perdido</sub>}
+      </div>
+      <p style="font-size:0.85rem;color:var(--c-texto-dim);margin-top:0.5rem">
+        El marcado inicial M₀(p) = 0 para toda plaza. Las transiciones
+        <code>enviar_SYN</code>, <code>entregar_SYN</code>, <code>enviar_SYNACK</code>,
+        <code>entregar_SYNACK</code>, <code>enviar_ACK</code>, <code>entregar_ACK</code>
+        modelan el flujo de segmentos en el canal. La plaza <code>p_perdido</code> inhibe
+        la entrega para modelar pérdida de paquetes.
+      </p>
+    </div>
+
+  </div>
+</section>

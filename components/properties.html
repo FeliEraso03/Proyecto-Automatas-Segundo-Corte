@@ -1,0 +1,65 @@
+<section id="propiedades">
+  <div class="contenedor">
+    <span class="seccion-label">§ Análisis Formal</span>
+    <h2 class="seccion-titulo">Propiedades Verificables del Modelo</h2>
+    <p class="seccion-descripcion">
+      Propiedades matemáticas que puede satisfacer el modelo combinado FSM + Red de Petri,
+      expresadas en lógica temporal (CTL) y teoría de redes de Petri.
+    </p>
+
+    <table class="tabla-props">
+      <thead>
+        <tr>
+          <th>Propiedad</th>
+          <th>Definición Formal</th>
+          <th>En el contexto TCP</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="prop-nombre">Ausencia de Deadlock</td>
+          <td class="prop-formula">¬∃M : ∀t ∈ T, t no habilitada en M</td>
+          <td>Ningún segmento queda atrapado en el canal sin ser entregado o descartado.</td>
+          <td><span class="badge badge-ok">Verificable</span></td>
+        </tr>
+        <tr>
+          <td class="prop-nombre">Acotación del Canal</td>
+          <td class="prop-formula">∃k : M(p_SYN) ≤ k ∀M alcanzable</td>
+          <td>El buffer del canal no desborda. No hay acumulación infinita de segmentos en tránsito.</td>
+          <td><span class="badge badge-ok">Verificable</span></td>
+        </tr>
+        <tr>
+          <td class="prop-nombre">Vivacidad (Liveness)</td>
+          <td class="prop-formula">∀t ∈ T, ∀M alcanzable, ∃ σ : t habilitada</td>
+          <td>Cada tipo de segmento (SYN, SYN-ACK, ACK) puede ser eventualmente entregado desde cualquier estado alcanzable.</td>
+          <td><span class="badge badge-ok">Verificable</span></td>
+        </tr>
+        <tr>
+          <td class="prop-nombre">Alcanzabilidad de ESTABLECIDO</td>
+          <td class="prop-formula">E&lt;&gt; (A_C = ESTAB ∧ A_S = ESTAB)</td>
+          <td>Existe al menos una traza de ejecución que lleva a ambos autómatas al estado ESTABLECIDO simultáneamente.</td>
+          <td><span class="badge badge-ok">Verificable en UPPAAL</span></td>
+        </tr>
+        <tr>
+          <td class="prop-nombre">Corrección bajo Pérdida</td>
+          <td class="prop-formula">A[] not deadlock (con p_perdido activo)</td>
+          <td>Aun con pérdida de paquetes, el mecanismo de timeout y retransmisión del FSM Cliente garantiza que el sistema no entra en deadlock.</td>
+          <td><span class="badge badge-parcial">Condicional al timeout</span></td>
+        </tr>
+        <tr>
+          <td class="prop-nombre">Corrección bajo RST</td>
+          <td class="prop-formula">A_C → CERRADO si A_S_OFF ∧ recibir_SYN</td>
+          <td>Si el servidor está inactivo y recibe un SYN, emite RST y el cliente regresa a CERRADO sin deadlock.</td>
+          <td><span class="badge badge-ok">Simulado</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<footer>
+  <div class="contenedor">
+    Teoría de la Computación — <span>TCP Three-Way Handshake</span> — FSM + Redes de Petri — Mayo 2026
+  </div>
+</footer>
