@@ -11,6 +11,7 @@ const TIP_DATA = {
   'rst':         { titulo:'Rechazo (RST)', clase:'w', subtitulo:'Servidor inactivo (OFF)', cuerpo:'El servidor responde con RST al recibir SYN. El cliente regresa a CERRADO sin deadlock. No hay conexión establecida.', formula:'∀SYN → RST (si Aˢ=OFF)' },
   'simultaneous':{ titulo:'Apertura Simultánea', clase:'w', subtitulo:'Simultaneous Open — RFC 793', cuerpo:'Ambos nodos inician conexión al mismo tiempo. El protocolo TCP resuelve la condición de carrera: ambos convergen en ESTABLECIDO.', formula:'Aᶜ=Aˢ=SYN-ENV ⇒ Aᶜ=Aˢ=ESTAB' },
 
+  
   // ── Plazas de la Red de Petri ──
   'pn-bufc':    { titulo:'p_buf_C', clase:'n', subtitulo:'Plaza — Buffer de salida (Cliente)', cuerpo:'Almacena el segmento SYN generado por el FSM Cliente antes de ser transmitido al canal. M(p_buf_C)=1 habilita enviar_SYN.', formula:'M(p_buf_C) ≥ 1 → env_SYN habilitada' },
   'pn-syn':     { titulo:'p_SYN', clase:'n', subtitulo:'Plaza — SYN en tránsito', cuerpo:'El segmento SYN está viajando por el canal de red de C hacia S. Su presencia (M≥1) habilita la transición entregar_SYN.', formula:'M(p_SYN) ≥ 1 → ent_SYN habilitada' },
